@@ -1,4 +1,4 @@
-public class Main {
+public class ZuukiApp {
 
     public static void main(String[] args) {
         //driver code
