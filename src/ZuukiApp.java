@@ -12,18 +12,24 @@ public class ZuukiApp {
     public static void zuukiApp() {
         //TODO: CREATE A FUNCTIONAL UI HERE, THAT THROWS AN EXCEPTION WHENEVER NECESSARRY
 
-        
-        final int kSize = 50;  // constant
-        
+        final int kSize = 50; // constant
+
         //initialize size of arrays with kSize
         String[] name = new String[kSize];
         int[] age = new int[kSize];
         String[] species = new String[kSize];
         int[] enclosure_number = new int[kSize];
-        
+
         int counter = 0; //tracks the available index
 
-        counter = createAnimal(name, age, species, enclosure_number, counter); //simply updates the counter
+        counter = createAnimal(
+            name,
+            age,
+            species,
+            enclosure_number,
+            counter,
+            kSize
+        ); //simply updates the counter
         updateAnimal();
         deleteAnimal();
         displayAnimal(name, age, species, enclosure_number, counter);
@@ -34,18 +40,17 @@ public class ZuukiApp {
         int age[],
         String[] species,
         int[] enclosure_number,
-        int counter
+        int counter,
+        int kSize
     ) {
-        //TODO: IMPLEMENT A FUNCTION THAT CREATE AN ANIMAL WITH ATTRIBUTES
-        // SUCH NAME, AGE, ETC. REFER TO PDF
-        // USE PARALLEL ARRAYS like name[i], age[i]
+        //checks if theres available space
+        if (counter >= kSize) return 0; //early exit
 
         Scanner scan = new Scanner(System.in);
         boolean isCleanInputs = false; //flag if clean inputs
 
         do {
             try {
-                
                 //bunch of user inputs
                 System.out.print("Name: ");
                 name[counter] = scan.nextLine();
