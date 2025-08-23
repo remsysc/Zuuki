@@ -1,12 +1,11 @@
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ZuukiApp {
 
     public static void main(String[] args) {
         //driver code
-
-        zuukiApp();
+        //
+        zuukiApp(); //run the application
     }
 
     public static void zuukiApp() {
@@ -22,6 +21,7 @@ public class ZuukiApp {
 
         int counter = 0; //tracks the available index
 
+        //updates counter
         counter = createAnimal(
             name,
             age,
@@ -29,7 +29,7 @@ public class ZuukiApp {
             enclosure_number,
             counter,
             kSize
-        ); //simply updates the counter
+        ); // PASS BY VALUE of the REFERENCE
         updateAnimal();
         deleteAnimal();
         displayAnimal(name, age, species, enclosure_number, counter);
@@ -37,7 +37,7 @@ public class ZuukiApp {
 
     public static int createAnimal(
         String[] name,
-        int age[],
+        int[] age,
         String[] species,
         int[] enclosure_number,
         int counter,
@@ -64,8 +64,8 @@ public class ZuukiApp {
                 System.out.print("Enclosure number: ");
                 enclosure_number[counter] = Integer.parseInt(scan.nextLine());
 
-                counter++; //increment since the method is done
-                isCleanInputs = true; //break of loop
+                counter++; //update counter
+                isCleanInputs = true; //break loop
             } catch (NumberFormatException e) {
                 //loop back if input aint clean
                 System.out.println("Invalid Input: " + e.getMessage()); //echo the error
