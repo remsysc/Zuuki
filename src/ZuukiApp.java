@@ -178,7 +178,9 @@ public class ZuukiApp {
                     isValid = true;
                     break;
                 case 2:
-                    //countAnimals
+                    //searchBySpecies
+                    // count and display via group
+                    searchAnimalBySpecies(name, species, counter);
                     break;
                 case 3:
                     displayAnimalsByEnclosureNumber(
@@ -296,6 +298,60 @@ public class ZuukiApp {
         } while (isValid);
     }
 
+    public static void searchAnimalBySpecies(
+        String[] name,
+        String[] species,
+        int counter
+    ) {
+        // display all availabe species only
+        //
+        // display specific species
+        // ccount animals belong to specific species
+        //
+        displayAllSpecies(species, counter);
+        
+        
+        
+        
+    }
+
+    private static void displayAllSpecies(String[] species, int counter) {
+        if (counter <= 0) System.out.println("No registered animal.");
+
+        //counter - 1 is the actual number of registered animals
+        //
+        String[] res = new String[counter];
+        int count = 0;
+        for (String s : species) {
+            //checks if already exist
+            if (s == null || s.isBlank()) continue; // skips null /empty values
+            if (!isAlreadyExist(res, s, count)) {
+                res[count] = s;
+                count++;
+            }
+        }
+
+        System.out.println("Species Registered: ");
+        for (var s : res) {
+            if (s == null) continue;
+            System.out.print(s + " ");
+        }
+    }
+
+    private static boolean isAlreadyExist(
+        String[] result,
+        String str,
+        int counter
+    ) {
+        for (int i = 0; i < counter; i++) {
+            if (
+                result[i] != null && result[i].equalsIgnoreCase(str)
+            ) return true;
+        }
+
+        return false;
+    }
+
     public static int isNameValid(
         String userInput,
         String[] name,
@@ -325,14 +381,11 @@ public class ZuukiApp {
             if (tmp.length() > 1) {
                 System.out.println("Invalid Input. Try again.");
                 continue;
-            } 
-            else if (tmp.equalsIgnoreCase("c")) return "c";
+            } else if (tmp.equalsIgnoreCase("c")) return "c";
             else if (tmp.equalsIgnoreCase("b")) return "b";
             else if (tmp.equalsIgnoreCase("q")) {
-                
                 System.out.println("Thanks for using Zuuki <3..");
                 System.exit(0);
-                
             } else {
                 return null;
             }
