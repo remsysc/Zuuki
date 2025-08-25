@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class ZuukiApp {
 
+    static final int kSize = 50; // constant
+
     public static void main(String[] args) {
         //driver code
         //
@@ -9,8 +11,6 @@ public class ZuukiApp {
     }
 
     public static void zuukiApp() {
-        final int kSize = 50; // constant
-
         //initialize size of arrays with kSize
         String[] name = new String[kSize];
         int[] age = new int[kSize];
@@ -34,8 +34,8 @@ public class ZuukiApp {
                         age,
                         species,
                         enclosure_number,
-                        counter,
-                        kSize
+                        counter
+
                     );
                     break;
                 case "2":
@@ -44,8 +44,8 @@ public class ZuukiApp {
                         age,
                         species,
                         enclosure_number,
-                        counter,
-                        kSize
+                        counter
+
                     );
                     break;
                 case "3":
@@ -64,7 +64,7 @@ public class ZuukiApp {
                         species,
                         enclosure_number,
                         counter,
-                        kSize
+
                     );
                 case "c":
                     continue;
@@ -82,8 +82,7 @@ public class ZuukiApp {
         int[] age,
         String[] species,
         int[] enclosure_number,
-        int counter,
-        int kSize
+        int counter
     ) {
         //checks if theres available space
         if (counter >= kSize) return 0; //early exit
@@ -120,8 +119,7 @@ public class ZuukiApp {
         int[] age,
         String[] species,
         int[] enclosure_number,
-        int counter,
-        int kSize
+        int counter
     ) {
         //early exit if no registered animal
 
@@ -163,8 +161,7 @@ public class ZuukiApp {
         int[] age,
         String[] species,
         int[] enclosure_number,
-        int counter,
-        int kSizes
+        int counter
     ) {
         //TODO: SHIFT THE "DELETED" to the end of array
 
@@ -384,7 +381,6 @@ public class ZuukiApp {
     ) {
         if (!isAnyAnimalDataExist(counter)) return;
 
-        boolean isValid = true;
         do {
             System.out.println("Enter the name of animal: ");
             String userInput = getUserInput();
@@ -406,8 +402,8 @@ public class ZuukiApp {
             System.out.println("Species: " + species[index]);
             System.out.println("Enclosure Number: " + enclosure_number[index]);
 
-            isValid = false;
-        } while (isValid);
+            break;
+        } while (true);
 
         System.out.println(".\n.\nEnd.");
     }
