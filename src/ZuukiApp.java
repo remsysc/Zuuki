@@ -35,18 +35,10 @@ public class ZuukiApp {
                         species,
                         enclosure_number,
                         counter
-
                     );
                     break;
                 case "2":
-                    updateAnimal(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-
-                    );
+                    updateAnimal(name, age, species, enclosure_number, counter);
                     break;
                 case "3":
                     displayAnimal(
@@ -58,14 +50,7 @@ public class ZuukiApp {
                     );
                     break;
                 case "4":
-                    deleteAnimal(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter,
-
-                    );
+                    deleteAnimal(name, age, species, enclosure_number, counter);
                 case "c":
                     continue;
                 case "b":
@@ -148,8 +133,7 @@ public class ZuukiApp {
                 age,
                 species,
                 enclosure_number,
-                userInput - 1,
-                kSize
+                userInput - 1
             );
 
             isValid = true;
