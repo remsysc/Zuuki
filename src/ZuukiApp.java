@@ -180,7 +180,13 @@ public class ZuukiApp {
                 case 2:
                     //searchBySpecies
                     // count and display via group
-                    searchAnimalBySpecies(name, species, counter);
+                    searchAnimalBySpecies(
+                        name,
+                        age,
+                        species,
+                        enclosure_number,
+                        counter
+                    );
                     break;
                 case 3:
                     displayAnimalsByEnclosureNumber(
@@ -207,9 +213,8 @@ public class ZuukiApp {
         int[] enclosure_number,
         int counter
     ) {
-        //get user inputs
-        // must be valid input
-        // either check here or from parent
+        // display the range of enclosure
+        // display count of animals per enclosure and display animals per enclosure
         int userInput = 10;
         int count = 1;
 
@@ -235,17 +240,21 @@ public class ZuukiApp {
     }
 
     //method overloading
-    public static int countAnimals(
-        String userInput,
-        String[] species,
-        int counter
-    ) {
+    public static int countAnimals(String[] species, int counter) {
+        //get user inputs
+        System.out.println("Enter the specie: ");
+        String userInput = getUserInput();
+
         int total = 0;
 
         for (int i = 0; i < counter; i++) {
             if (userInput.equalsIgnoreCase(species[i])) total++;
         }
-
+        if (total <= 0) {
+            System.out.println("No animals were found.");
+        } else System.out.println(
+            "A total of " + total + " animals were found."
+        );
         return total;
     }
 
@@ -280,8 +289,7 @@ public class ZuukiApp {
 
             int index = isNameValid(userInput, name, counter);
             if (index < 0) {
-                String indexString = Integer.toString(index);
-                String tmp = userPrompt(indexString);
+                String tmp = userPrompt();
 
                 if (tmp.equalsIgnoreCase("c")) continue;
                 if (tmp.equalsIgnoreCase("b")) return;
@@ -300,7 +308,9 @@ public class ZuukiApp {
 
     public static void searchAnimalBySpecies(
         String[] name,
+        int[] age,
         String[] species,
+        int[] enclosure_number,
         int counter
     ) {
         // display all availabe species only
@@ -309,10 +319,66 @@ public class ZuukiApp {
         // ccount animals belong to specific species
         //
         displayAllSpecies(species, counter);
-        
-        
-        
-        
+
+        //menu
+        //
+        //
+        boolean isValid = true;
+        do {
+            System.out.println("Available Species: ");
+            displayAllSpecies(species, counter);
+            System.out.println(
+                "1. Display animals By specific species\n2.Count Animals by Specific species"
+            );
+
+            int userInput = Integer.parseInt(getUserInput());
+
+            switch (userInput) {
+                case 1:
+                    displayAnimalBySpecies(
+                        name,
+                        age,
+                        species,
+                        enclosure_number,
+                        counter
+                    );
+                    break;
+                case 2:
+                    countAnimals(species, counter);
+                    break;
+                default:
+                    System.out.println("Invalid Input");
+            }
+
+            String tmp = userPrompt();
+            if (tmp.equalsIgnoreCase("c")) continue;
+            if (tmp.equalsIgnoreCase("b")) return;
+        } while (isValid);
+    }
+
+    private static void displayAnimalBySpecies(
+        String[] name,
+        int[] age,
+        String[] species,
+        int[] enclosure_number,
+        int counter
+    ) {
+        //get the user input
+        System.out.println("Species: ");
+        String userInput = getUserInput();
+
+        //display all animals of that scpecies
+        //
+        System.out.println("Displaying..\n.\n.");
+        for (int i = 0; i < counter; i++) {
+            if (species[i].equalsIgnoreCase(userInput)) {
+                //display all details if true
+                System.out.println("Name: " + name[i]);
+                System.out.println("Age: " + age[i]);
+                System.out.println("Enclosure Number: " + enclosure_number[i]);
+            }
+        }
+        System.out.println("\n.\n.\nEnd.");
     }
 
     private static void displayAllSpecies(String[] species, int counter) {
@@ -336,6 +402,7 @@ public class ZuukiApp {
             if (s == null) continue;
             System.out.print(s + " ");
         }
+        System.out.println();
     }
 
     private static boolean isAlreadyExist(
@@ -371,7 +438,7 @@ public class ZuukiApp {
         return scan.nextLine();
     }
 
-    public static String userPrompt(String str) {
+    public static String userPrompt() {
         while (true) {
             System.out.println(
                 "Press 'c' to try again and 'q' to quit or 'b' to back "
