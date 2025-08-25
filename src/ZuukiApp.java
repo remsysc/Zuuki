@@ -158,14 +158,11 @@ public class ZuukiApp {
         int counter
     ) {
         Scanner scan = new Scanner(System.in);
-        boolean isValid = false;
         do {
             System.out.println(
                 "1. Search animal by name\n2. Count Animals by species\n3. Display animal by specific enclosure"
             );
-            System.out.print(">> ");
-            int userInput = Integer.parseInt(scan.nextLine());
-
+            int userInput = getUserInput(0);
             switch (userInput) {
                 case 1:
                     searchAnimalByName(
@@ -175,7 +172,6 @@ public class ZuukiApp {
                         enclosure_number,
                         counter
                     );
-                    isValid = true;
                     break;
                 case 2:
                     //searchBySpecies
@@ -199,11 +195,11 @@ public class ZuukiApp {
                     break;
                 default:
                     System.out.println("Invalid Input.");
-                    isValid = true;
             }
-
-            //ask whether to continue or not
-        } while (isValid);
+            String tmp = userPrompt();
+            if (tmp.equalsIgnoreCase("c")) continue;
+            if (tmp.equalsIgnoreCase("b")) return;
+        } while (true);
     }
 
     public static void displayAnimalsByEnclosureNumber(
@@ -215,15 +211,70 @@ public class ZuukiApp {
     ) {
         // display the range of enclosure
         // display count of animals per enclosure and display animals per enclosure
-        int userInput = 10;
-        int count = 1;
+        do {
+            System.out.println("Enclosure Number: 0 -- 4");
 
+            System.out.println(
+                "1. Display animals by enclosure #.\n2. Count animals inside a specific enclosure number."
+            );
+
+            int userInput = getUserInput(0);
+
+            switch (userInput) {
+                case 1:
+                    displayAnimalsByEnclosure(
+                        name,
+                        age,
+                        species,
+                        enclosure_number,
+                        counter
+                    );
+                    break;
+                case 2:
+                    countAnimals(enclosure_number, counter);
+                    break;
+                default:
+                    System.out.println("Invalid Input.");
+                    break;
+            }
+
+            String tmp = userPrompt();
+            if (tmp.equalsIgnoreCase("c")) continue;
+            if (tmp.equalsIgnoreCase("b")) return;
+        } while (true);
+    }
+
+    private static void displayAnimalsByEnclosure(
+        String[] name,
+        int[] age,
+        String[] species,
+        int[] enclosure_number,
+        int counter
+    ) {
+        int count = 1;
+        int userInput = getEnclosureInput();
         for (int i = 0; i < counter; i++) {
             if (enclosure_number[i] == userInput) {
                 displayAnimal(i, count, name, age, species);
                 count++;
             }
         }
+    }
+
+    private static int getEnclosureInput() {
+        int userInput = -1;
+
+        while (true) {
+            System.out.println("Enter Enclosure #: ");
+            userInput = getUserInput(userInput);
+
+            if (userInput < 0 || userInput > 4) {
+                System.out.println("Invalid Range.");
+                continue;
+            }
+            break;
+        }
+        return userInput;
     }
 
     public static void displayAnimal(
@@ -258,17 +309,16 @@ public class ZuukiApp {
         return total;
     }
 
-    public static int countAnimals(
-        int userInput,
-        int[] enclosure_number,
-        int counter
-    ) {
+    public static int countAnimals(int[] enclosure_number, int counter) {
+        //get user inputs
+        int userInput = getEnclosureInput();
+
         int total = 0;
 
         for (int i = 0; i < counter; i++) {
             if (enclosure_number[i] == userInput) total++;
         }
-
+        System.out.println("A total of " + total + " animals were found.");
         return total;
     }
 
@@ -331,7 +381,7 @@ public class ZuukiApp {
                 "1. Display animals By specific species\n2.Count Animals by Specific species"
             );
 
-            int userInput = Integer.parseInt(getUserInput());
+            int userInput = getUserInput(0);
 
             switch (userInput) {
                 case 1:
@@ -438,6 +488,16 @@ public class ZuukiApp {
         return scan.nextLine();
     }
 
+    public static int getUserInput(int userInput) {
+        Scanner scan = new Scanner(System.in);
+        System.out.print(">> ");
+        try {
+            userInput = Integer.parseInt(scan.nextLine());
+        } catch (NumberFormatException e) {}
+
+        return userInput;
+    }
+
     public static String userPrompt() {
         while (true) {
             System.out.println(
@@ -454,7 +514,7 @@ public class ZuukiApp {
                 System.out.println("Thanks for using Zuuki <3..");
                 System.exit(0);
             } else {
-                return null;
+                System.out.println("Invalid Input");
             }
         }
     }
