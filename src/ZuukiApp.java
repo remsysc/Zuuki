@@ -278,7 +278,7 @@ public class ZuukiApp {
 
         for (int i = 0; i < counter; i++) {
             if (enclosure_number[i] == userInput) {
-                displayAnimal(i, count, name, age, species);
+                displaySpecificAnimal(i, count, name, age, species);
                 count++;
             }
         }
@@ -302,7 +302,7 @@ public class ZuukiApp {
         return userInput;
     }
 
-    public static void displayAnimal(
+    public static void displaySpecificAnimal(
         int index,
         int count,
         String[] name,
