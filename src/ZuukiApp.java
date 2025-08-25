@@ -6,6 +6,8 @@ public class ZuukiApp {
         //driver code
         //
         zuukiApp(); //run the application
+
+        displayTiteLoop();
     }
 
     public static void zuukiApp() {
@@ -457,5 +459,11 @@ public class ZuukiApp {
                 return null;
             }
         }
+    }
+    public static void displayTiteLoop(){
+        for (int i = 0; i < 100; i++) {
+            System.out.println("TITE");
+        }
+
     }
 }
