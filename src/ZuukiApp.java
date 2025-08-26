@@ -7,7 +7,6 @@ public class ZuukiApp {
 
     public static void main(String[] args) {
         //driver code
-        //
         zuukiApp(); //run the application
     }
 
@@ -290,7 +289,6 @@ public class ZuukiApp {
     public static int countAnimals(int[] enclosure_number, int counter) {
         //get user inputs
         int target = readInt("Enclosure (0-4): ", 0, 4);
-
         int total = 0;
 
         for (int i = 0; i < counter; i++) {
@@ -377,8 +375,6 @@ public class ZuukiApp {
         int[] enclosure_number,
         int counter
     ) {
-        //get the user input
-
         String target = readString("Species: ");
 
         //display all animals of that scpecies
@@ -404,8 +400,6 @@ public class ZuukiApp {
     }
 
     private static void displayAllSpecies(String[] species, int counter) {
-        if (counter <= 0) System.out.println("No species found.");
-
         String[] res = new String[counter];
         int count = 0;
         for (String s : species) {
