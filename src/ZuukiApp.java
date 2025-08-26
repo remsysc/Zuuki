@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class ZuukiApp {
 
     static final int kSize = 50; // constant
+    static final Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
         //driver code
@@ -10,7 +11,7 @@ public class ZuukiApp {
         zuukiApp(); //run the application
     }
 
-    public static void zuukiApp() {
+    static void zuukiApp() {
         //initialize size of arrays with kSize
         String[] name = new String[kSize];
         int[] age = new int[kSize];
@@ -24,45 +25,55 @@ public class ZuukiApp {
         );
 
         do {
-            System.out.println("1. Add\n2. Update\n3. Display\n4. Delete");
-            String userInput = userPrompt();
+            String choice = readString(
+                """
+                1. Add
+                2. Update
+                3. Display
+                4. Delete
+                5. Quit
+                """
+            );
 
-            switch (userInput) {
-                case "1":
-                    counter = createAnimal(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-                    );
-                    break;
-                case "2":
-                    updateAnimal(name, age, species, enclosure_number, counter);
-                    break;
-                case "3":
-                    displayAnimal(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-                    );
-                    break;
-                case "4":
-                    deleteAnimal(name, age, species, enclosure_number, counter);
-                case "c":
-                    continue;
-                case "b":
+            switch (choice) {
+                case "1" -> counter = createAnimal(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "2" -> updateAnimal(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "3" -> displayAnimal(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "4" -> counter = deleteAnimal(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "5" -> {
                     System.out.println("Thanks for using Zuuki <3.");
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid Input.");
+                    return;
+                }
+                default -> System.out.println("Invalid Input.");
             }
         } while (true);
     }
 
-    public static int createAnimal(
+    static int createAnimal(
         String[] name,
         int[] age,
         String[] species,
@@ -70,36 +81,30 @@ public class ZuukiApp {
         int counter
     ) {
         //checks if theres available space
-        if (counter >= kSize) return 0; //early exit
+        if (counter >= kSize) {
+            //early exit
+            System.out.println("Max limit has reached!");
+            return counter;
+        }
+        System.out.println("Adding animal..\n.\n.");
 
-        System.out.println("Doing something..\n.\n.");
-
-        Scanner scan = new Scanner(System.in);
-        boolean isCleanInputs = false; //flag if clean inputs
-
-        do {
+        while (true) {
             //bunch of user inputs
-            System.out.println("Name: ");
-            name[counter] = getUserInput();
-
-            System.out.println("Age: ");
-            age[counter] = getUserInput(0);
-
-            System.out.println("Species: ");
-            species[counter] = getUserInput();
-
-            enclosure_number[counter] = getEnclosureInput();
+            name[counter] = readString("Name:");
+            age[counter] = readInt("Age: ", 0, 999);
+            species[counter] = readString("Species:");
+            enclosure_number[counter] = readInt("Enclosure Number: ", 0, 4);
 
             counter++; //update counter
-            isCleanInputs = true; //break loop
-        } while (!isCleanInputs);
+            break;
+        }
 
         System.out.println(".\n.\nEnd.");
 
         return counter;
     }
 
-    public static void updateAnimal(
+    static void updateAnimal(
         String[] name,
         int[] age,
         String[] species,
@@ -107,7 +112,6 @@ public class ZuukiApp {
         int counter
     ) {
         //early exit if no registered animal
-
         if (counter <= 0) {
             System.out.println(
                 "No registered animal yet. Cannot proceed. Returning..\n.\n."
@@ -115,61 +119,42 @@ public class ZuukiApp {
             return;
         }
 
-        boolean isValid = false;
-        do {
-            System.out.println(
-                "Available registered animal from 1 - " + (counter)
-            );
-            System.out.println("Which animal you want to update?");
-
-            int userInput = getUserInput(0);
-
-            // checks if input is valid
-            if (userInput > counter || userInput <= 0) {
-                System.out.println("Invalid Range.");
-                continue;
-            } else createAnimal(
-                name,
-                age,
-                species,
-                enclosure_number,
-                userInput - 1
-            );
-
-            isValid = true;
-        } while (!isValid);
+        int index = readInt(
+            "Which index to update (0-" + (counter - 1) + "): ",
+            0,
+            counter - 1
+        );
+        name[index] = readString("New name: ");
+        age[index] = readInt("New age: ", 0, 999);
+        species[index] = readString("New species: ");
+        enclosure_number[index] = readInt("New enclosure (0-4): ", 0, 4);
     }
 
-    public static void deleteAnimal(
+    public static int deleteAnimal(
         String[] name,
         int[] age,
         String[] species,
         int[] enclosure_number,
         int counter
     ) {
-        //TODO: SHIFT THE "DELETED" to the end of array
+        if (counter <= 0) {
+            System.out.println("Nothing to delete. Returning ..");
+            return counter;
+        }
+        int index = readInt(
+            "Index to delete (0 to " + (counter - 1) + "): ",
+            0,
+            counter - 1
+        );
+        //shift everything after index back one slot
+        for (int i = index; i < counter - 1; i++) {
+            name[i] = name[i + 1];
+            age[i] = age[i + 1];
+            species[i] = species[i + 1];
+            enclosure_number[i] = enclosure_number[i + 1];
+        }
 
-        Scanner scan = new Scanner(System.in);
-        boolean isValid = false;
-        do {
-            try {
-                System.out.println("Animal index: ");
-                int userInput = getUserInput(0);
-
-                //checks the validity
-                if (userInput > counter - 1) {
-                    System.out.println("Invalid Index");
-                } else {
-                    name[userInput] = "[N/A]";
-                    age[userInput] = 0;
-                    species[userInput] = "[N/A]";
-                    enclosure_number[userInput] = 0;
-                }
-                isValid = true;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid Input");
-            }
-        } while (!isValid);
+        return counter - 1;
     }
 
     public static void displayAnimal(
@@ -179,47 +164,39 @@ public class ZuukiApp {
         int[] enclosure_number,
         int counter
     ) {
-        Scanner scan = new Scanner(System.in);
         do {
             System.out.println("Diplay options:");
-            System.out.println("1. Name\n2. Species\n3. Enclosure");
 
-            String userInput = userPrompt();
+            String userInput = readString(
+                "1. Name\n2. Species\n3. Enclosure\n4.Back"
+            );
             switch (userInput) {
-                case "1":
-                    searchAnimalByName(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-                    );
-                    break;
-                case "2":
-                    searchAnimalBySpecies(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-                    );
-                    break;
-                case "3":
-                    searchAnimalByEnclosure(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-                    );
-                    break;
-                case "c":
-                    continue;
-                case "b":
+                case "1" -> searchAnimalByName(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "2" -> searchAnimalBySpecies(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "3" -> searchAnimalByEnclosure(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "4" -> {
                     System.out.println("Returning..");
                     return;
-                default:
-                    System.out.println("Invalid Input.");
+                }
+                default -> System.out.println("Invalid Input.");
             }
         } while (true);
     }
@@ -232,36 +209,31 @@ public class ZuukiApp {
         int counter
     ) {
         if (!isAnyAnimalDataExist(counter)) return;
-        do {
-            System.out.println("Enclosure Number: 0 -- 4");
+        while (true) {
+            String choice = readString(
+                """
+                Enclosure (0-4):
+                1. Display
+                2. Count
+                """
+            );
 
-            System.out.println("1. Display\n2. Count");
-
-            String userInput = userPrompt();
-
-            switch (userInput) {
-                case "1":
-                    displayAnimalsByEnclosure(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-                    );
-                    break;
-                case "2":
-                    countAnimals(enclosure_number, counter);
-                    break;
-                case "c":
-                    continue;
-                case "b":
+            switch (choice) {
+                case "1" -> displayAnimalsByEnclosure(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "2" -> countAnimals(enclosure_number, counter);
+                case "3" -> {
                     System.out.println("Returning..");
                     return;
-                default:
-                    System.out.println("Invalid Input.");
-                    break;
+                }
+                default -> System.out.println("Invalid Input.");
             }
-        } while (true);
+        }
     }
 
     private static void displayAnimalsByEnclosure(
@@ -271,59 +243,37 @@ public class ZuukiApp {
         int[] enclosure_number,
         int counter
     ) {
-        int count = 1;
-        int userInput = getEnclosureInput();
-
+        int target = readInt("Enclosure (0-4): ", 0, 4);
         System.out.println("Displaying ..\n.\n.");
 
         for (int i = 0; i < counter; i++) {
-            if (enclosure_number[i] == userInput) {
-                displaySpecificAnimal(i, count, name, age, species);
-                count++;
+            if (enclosure_number[i] == target) {
+                System.out.printf(
+                    """
+                    Enclosure: %d
+                    Name: %s
+                    Age: %d
+                    Species: %s
+                    """,
+                    target,
+                    name[i],
+                    age[i],
+                    species[i]
+                );
             }
         }
 
         System.out.println(".\n.\nEnd.");
     }
 
-    private static int getEnclosureInput() {
-        int userInput = -1;
-
-        while (true) {
-            System.out.println("Enter Enclosure (0 - 4): ");
-            userInput = getUserInput(userInput);
-
-            if (userInput < 0 || userInput > 4) {
-                System.out.println("Invalid Range.");
-                continue;
-            }
-            break;
-        }
-        return userInput;
-    }
-
-    public static void displaySpecificAnimal(
-        int index,
-        int count,
-        String[] name,
-        int[] age,
-        String[] species
-    ) {
-        System.out.println(count + ".");
-        System.out.println("Name: " + name[index]);
-        System.out.println("Age: " + age[index]);
-        System.out.println("Species: " + species[index]);
-    }
-
     //method overloading
+    //count animals by species
     public static int countAnimals(String[] species, int counter) {
-        System.out.println("Enter the specie: ");
-        String userInput = getUserInput();
-
+        String target = readString("Species to count: ");
         int total = 0;
 
         for (int i = 0; i < counter; i++) {
-            if (userInput.equalsIgnoreCase(species[i])) total++;
+            if (target.equalsIgnoreCase(species[i])) total++;
         }
         if (total <= 0) {
             System.out.println("No animals were found.");
@@ -331,7 +281,7 @@ public class ZuukiApp {
             "A total of " +
             total +
             " animal/s were found with species of " +
-            userInput +
+            target +
             "."
         );
         return total;
@@ -339,18 +289,18 @@ public class ZuukiApp {
 
     public static int countAnimals(int[] enclosure_number, int counter) {
         //get user inputs
-        int userInput = getEnclosureInput();
+        int target = readInt("Enclosure (0-4): ", 0, 4);
 
         int total = 0;
 
         for (int i = 0; i < counter; i++) {
-            if (enclosure_number[i] == userInput) total++;
+            if (enclosure_number[i] == target) total++;
         }
         System.out.println(
             "A total of " +
             total +
             " animals were found at enclosure number " +
-            userInput +
+            target +
             "."
         );
         return total;
@@ -365,31 +315,27 @@ public class ZuukiApp {
     ) {
         if (!isAnyAnimalDataExist(counter)) return;
 
-        do {
-            System.out.println("Enter the name of animal: ");
-            String userInput = getUserInput();
-
-            System.out.println("Searching the archives..\n.\n.");
-
-            int index = isNameValid(userInput, name, counter);
-            if (index < 0) {
-                String tmp = userPrompt();
-
-                if (tmp.equalsIgnoreCase("c")) continue;
-                if (tmp.equalsIgnoreCase("b")) return;
+        String target = readString("Name to find: ");
+        for (int i = 0; i < counter; i++) {
+            if (name[i].equalsIgnoreCase(target)) {
+                System.out.printf(
+                    """
+                    Found at index %d:
+                    Name: %s
+                    Age: %d
+                    Species: %s
+                    Enclosure %d
+                    """,
+                    i,
+                    name[i],
+                    age[i],
+                    species[i],
+                    enclosure_number[i]
+                );
+                return;
             }
-
-            //display all information regarding the found userInput
-
-            System.out.println("Name: " + name[index]);
-            System.out.println("Age: " + age[index]);
-            System.out.println("Species: " + species[index]);
-            System.out.println("Enclosure Number: " + enclosure_number[index]);
-
-            break;
-        } while (true);
-
-        System.out.println(".\n.\nEnd.");
+        }
+        System.out.println(target + " not found.");
     }
 
     public static void searchAnimalBySpecies(
@@ -403,29 +349,23 @@ public class ZuukiApp {
 
         do {
             displayAllSpecies(species, counter);
-            System.out.println("1. Display\n2. Count");
 
-            String userInput = userPrompt();
+            String userInput = readString("1.Display\n2. Count");
 
             switch (userInput) {
-                case "1":
-                    displayAnimalBySpecies(
-                        name,
-                        age,
-                        species,
-                        enclosure_number,
-                        counter
-                    );
-                    break;
-                case "2":
-                    countAnimals(species, counter);
-                    break;
-                case "c":
-                    continue;
-                case "b":
+                case "1" -> displayAnimalBySpecies(
+                    name,
+                    age,
+                    species,
+                    enclosure_number,
+                    counter
+                );
+                case "2" -> countAnimals(species, counter);
+                case "3" -> {
                     System.out.println("Returning..");
-                default:
-                    System.out.println("Invalid Input");
+                    return;
+                }
+                default -> System.out.println("Invalid Input");
             }
         } while (true);
     }
@@ -438,18 +378,26 @@ public class ZuukiApp {
         int counter
     ) {
         //get the user input
-        System.out.println("Species: ");
-        String userInput = getUserInput();
+
+        String target = readString("Species: ");
 
         //display all animals of that scpecies
         //
         System.out.println("Displaying..\n.\n.");
         for (int i = 0; i < counter; i++) {
-            if (species[i].equalsIgnoreCase(userInput)) {
-                //display all details if true
-                System.out.println("Name: " + name[i]);
-                System.out.println("Age: " + age[i]);
-                System.out.println("Enclosure Number: " + enclosure_number[i]);
+            if (species[i].equalsIgnoreCase(target)) {
+                System.out.printf(
+                    """
+                    Species: %s
+                    Name: %s
+                    Age: %d
+                    Enclosure: %d
+                    """,
+                    target,
+                    name[i],
+                    age[i],
+                    enclosure_number[i]
+                );
             }
         }
         System.out.println("\n.\n.\nEnd.");
@@ -458,8 +406,6 @@ public class ZuukiApp {
     private static void displayAllSpecies(String[] species, int counter) {
         if (counter <= 0) System.out.println("No species found.");
 
-        //counter - 1 is the actual number of registered animals
-        //
         String[] res = new String[counter];
         int count = 0;
         for (String s : species) {
@@ -493,56 +439,6 @@ public class ZuukiApp {
         return false;
     }
 
-    public static int isNameValid(
-        String userInput,
-        String[] name,
-        int counter
-    ) {
-        for (int i = 0; i < counter; i++) {
-            //linear search
-            if (userInput.equalsIgnoreCase(name[i])) return i;
-        }
-        System.out.println(userInput + " not found.");
-        return -1;
-    }
-
-    public static String getUserInput() {
-        Scanner scan = new Scanner(System.in);
-        System.out.print(">> ");
-        return scan.nextLine();
-    }
-
-    public static int getUserInput(int userInput) {
-        Scanner scan = new Scanner(System.in);
-        System.out.print(">> ");
-        try {
-            userInput = Integer.parseInt(scan.nextLine());
-        } catch (NumberFormatException e) {}
-
-        return userInput;
-    }
-
-    public static String userPrompt() {
-        while (true) {
-            System.out.println(
-                "Press 'c' to try again and 'q' to quit or 'b' to back "
-            );
-            String tmp = getUserInput();
-
-            if (tmp.length() > 1) {
-                System.out.println("Invalid Input. Try again.");
-                continue;
-            } else if (tmp.equalsIgnoreCase("c")) return "c";
-            else if (tmp.equalsIgnoreCase("b")) return "b";
-            else if (tmp.equalsIgnoreCase("q")) {
-                System.out.println("Thanks for using Zuuki <3..");
-                System.exit(0);
-            } else {
-                return tmp;
-            }
-        }
-    }
-
     public static boolean isAnyAnimalDataExist(int counter) {
         if (counter <= 0) {
             System.out.println(
@@ -551,5 +447,34 @@ public class ZuukiApp {
             return false;
         }
         return true;
+    }
+
+    static String readString(String prompt) {
+        System.out.println(prompt);
+        System.out.print(">> ");
+
+        return scan.nextLine().trim();
+    }
+
+    static int readInt(String prompt, int min, int max) {
+        while (true) {
+            System.out.println(prompt);
+            System.out.print(">> ");
+            try {
+                int userInput = Integer.parseInt(scan.nextLine());
+
+                if (userInput < min || userInput > max) {
+                    System.out.printf(
+                        "Enter a value between %d and %d.%n",
+                        min,
+                        max
+                    );
+                    continue;
+                }
+                return userInput;
+            } catch (NumberFormatException e) {
+                System.out.println("Not a number. Try Again.");
+            }
+        }
     }
 }
