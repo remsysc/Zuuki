@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class ZuukiApp {
 
-    static final int kSize = 50; // constant
-    static final Scanner scan = new Scanner(System.in);
+    private static final int kSize = 50; // constant
+    private static final Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
         //driver code
@@ -349,7 +349,7 @@ public class ZuukiApp {
         do {
             displayAllSpecies(species, counter);
 
-            String userInput = readString("1.Display\n2. Count");
+            String userInput = readString("1. Display\n2. Count");
 
             switch (userInput) {
                 case "1" -> displayAnimalBySpecies(
