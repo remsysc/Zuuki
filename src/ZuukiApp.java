@@ -111,11 +111,10 @@ public class ZuukiApp {
         int counter
     ) {
         //early exit if no registered animal
-        if (counter <= 0) {
-            System.out.println(
-                "No registered animal yet. Cannot proceed. Returning..\n.\n."
-            );
-            return;
+        if (!isAnyAnimalDataExist(counter)) return;
+
+        for (int i = 0; i < counter; i++) {
+            System.out.printf("%d. %s (%s)\n", i, name[i], species[i]);
         }
 
         int index = readInt(
@@ -136,10 +135,8 @@ public class ZuukiApp {
         int[] enclosure_number,
         int counter
     ) {
-        if (counter <= 0) {
-            System.out.println("Nothing to delete. Returning ..");
-            return counter;
-        }
+        if (!isAnyAnimalDataExist(counter)) return counter;
+
         int index = readInt(
             "Index to delete (0 to " + (counter - 1) + "): ",
             0,
@@ -248,18 +245,7 @@ public class ZuukiApp {
 
         for (int i = 0; i < counter; i++) {
             if (enclosure_number[i] == target) {
-                System.out.printf(
-                    """
-                    Enclosure: %d
-                    Name: %s
-                    Age: %d
-                    Species: %s
-                    """,
-                    target,
-                    name[i],
-                    age[i],
-                    species[i]
-                );
+                printAnimal(i, name, age, species, enclosure_number);
             }
         }
 
@@ -287,6 +273,7 @@ public class ZuukiApp {
         return total;
     }
 
+    //count animals by enclosure
     private static int countAnimals(int[] enclosure_number, int counter) {
         //get user inputs
         int target = readInt("Enclosure (0-4): ", 0, 4);
@@ -317,20 +304,7 @@ public class ZuukiApp {
         String target = readString("Name to find: ");
         for (int i = 0; i < counter; i++) {
             if (name[i].equalsIgnoreCase(target)) {
-                System.out.printf(
-                    """
-                    Found at index %d:
-                    Name: %s
-                    Age: %d
-                    Species: %s
-                    Enclosure %d
-                    """,
-                    i,
-                    name[i],
-                    age[i],
-                    species[i],
-                    enclosure_number[i]
-                );
+                printAnimal(i, name, age, species, enclosure_number);
                 return;
             }
         }
@@ -349,7 +323,7 @@ public class ZuukiApp {
         do {
             displayAllSpecies(species, counter);
 
-            String userInput = readString("1. Display\n2. Count");
+            String userInput = readString("1. Display\n2. Count 3. Back");
 
             switch (userInput) {
                 case "1" -> displayAnimalBySpecies(
@@ -382,18 +356,7 @@ public class ZuukiApp {
         System.out.println("Displaying..\n.\n.");
         for (int i = 0; i < counter; i++) {
             if (species[i].equalsIgnoreCase(target)) {
-                System.out.printf(
-                    """
-                    Species: %s
-                    Name: %s
-                    Age: %d
-                    Enclosure: %d
-                    """,
-                    target,
-                    name[i],
-                    age[i],
-                    enclosure_number[i]
-                );
+                printAnimal(i, name, age, species, enclosure_number);
             }
         }
         System.out.println("\n.\n.\nEnd.");
@@ -470,5 +433,29 @@ public class ZuukiApp {
                 System.out.println("Not a number. Try Again.");
             }
         }
+    }
+
+    private static void printAnimal(
+        int i,
+        String[] name,
+        int[] age,
+        String[] species,
+        int[] enclosure
+    ) {
+        System.out.printf(
+            """
+            Index: %d
+            Name: %s
+            Age: %d
+            Species: %s
+            Enclosure: %d
+            ------------------
+            """,
+            i,
+            name[i],
+            age[i],
+            species[i],
+            enclosure[i]
+        );
     }
 }
