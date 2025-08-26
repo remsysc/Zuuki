@@ -92,7 +92,7 @@ public class ZuukiApp {
             name[counter] = readString("Name:");
             age[counter] = readInt("Age: ", 0, 999);
             species[counter] = readString("Species:");
-            enclosure_number[counter] = readInt("Enclosure Number: ", 0, 4);
+            enclosure_number[counter] = readInt("Enclosure (0-4): ", 0, 4);
 
             counter++; //update counter
             break;
@@ -167,7 +167,7 @@ public class ZuukiApp {
             System.out.println("Diplay options:");
 
             String userInput = readString(
-                "1. Name\n2. Species\n3. Enclosure\n4.Back"
+                "1. Name\n2. Species\n3. Enclosure\n4. Back"
             );
             switch (userInput) {
                 case "1" -> searchAnimalByName(
@@ -214,6 +214,7 @@ public class ZuukiApp {
                 Enclosure (0-4):
                 1. Display
                 2. Count
+                3. Back
                 """
             );
 
@@ -378,7 +379,6 @@ public class ZuukiApp {
         String target = readString("Species: ");
 
         //display all animals of that scpecies
-        //
         System.out.println("Displaying..\n.\n.");
         for (int i = 0; i < counter; i++) {
             if (species[i].equalsIgnoreCase(target)) {
