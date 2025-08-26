@@ -10,7 +10,7 @@ public class ZuukiApp {
         zuukiApp(); //run the application
     }
 
-    static void zuukiApp() {
+    private static void zuukiApp() {
         //initialize size of arrays with kSize
         String[] name = new String[kSize];
         int[] age = new int[kSize];
@@ -72,7 +72,7 @@ public class ZuukiApp {
         } while (true);
     }
 
-    static int createAnimal(
+    private static int createAnimal(
         String[] name,
         int[] age,
         String[] species,
@@ -103,7 +103,7 @@ public class ZuukiApp {
         return counter;
     }
 
-    static void updateAnimal(
+    private static void updateAnimal(
         String[] name,
         int[] age,
         String[] species,
@@ -129,7 +129,7 @@ public class ZuukiApp {
         enclosure_number[index] = readInt("New enclosure (0-4): ", 0, 4);
     }
 
-    public static int deleteAnimal(
+    private static int deleteAnimal(
         String[] name,
         int[] age,
         String[] species,
@@ -156,7 +156,7 @@ public class ZuukiApp {
         return counter - 1;
     }
 
-    public static void displayAnimal(
+    private static void displayAnimal(
         String[] name,
         int[] age,
         String[] species,
@@ -200,7 +200,7 @@ public class ZuukiApp {
         } while (true);
     }
 
-    public static void searchAnimalByEnclosure(
+    private static void searchAnimalByEnclosure(
         String[] name,
         int[] age,
         String[] species,
@@ -268,7 +268,7 @@ public class ZuukiApp {
 
     //method overloading
     //count animals by species
-    public static int countAnimals(String[] species, int counter) {
+    private static int countAnimals(String[] species, int counter) {
         String target = readString("Species to count: ");
         int total = 0;
 
@@ -287,7 +287,7 @@ public class ZuukiApp {
         return total;
     }
 
-    public static int countAnimals(int[] enclosure_number, int counter) {
+    private static int countAnimals(int[] enclosure_number, int counter) {
         //get user inputs
         int target = readInt("Enclosure (0-4): ", 0, 4);
         int total = 0;
@@ -305,7 +305,7 @@ public class ZuukiApp {
         return total;
     }
 
-    public static void searchAnimalByName(
+    private static void searchAnimalByName(
         String[] name,
         int[] age,
         String[] species,
@@ -337,7 +337,7 @@ public class ZuukiApp {
         System.out.println(target + " not found.");
     }
 
-    public static void searchAnimalBySpecies(
+    private static void searchAnimalBySpecies(
         String[] name,
         int[] age,
         String[] species,
@@ -433,7 +433,7 @@ public class ZuukiApp {
         return false;
     }
 
-    public static boolean isAnyAnimalDataExist(int counter) {
+    private static boolean isAnyAnimalDataExist(int counter) {
         if (counter <= 0) {
             System.out.println(
                 "[No registered animals yet, please consider adding one first]"
@@ -443,7 +443,7 @@ public class ZuukiApp {
         return true;
     }
 
-    static String readString(String prompt) {
+    private static String readString(String prompt) {
         System.out.println(prompt);
         System.out.print(">> ");
 
