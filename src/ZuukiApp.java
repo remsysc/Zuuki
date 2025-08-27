@@ -22,8 +22,7 @@ public class ZuukiApp {
         System.out.println(
             "Your personal animal inventory app.\nPlease choose."
         );
-
-        do {
+        while (true) {
             String choice = readString(
                 """
                 1. Add
@@ -33,7 +32,6 @@ public class ZuukiApp {
                 5. Quit
                 """
             );
-
             switch (choice) {
                 case "1" -> counter = createAnimal(
                     name,
@@ -69,7 +67,7 @@ public class ZuukiApp {
                 }
                 default -> System.out.println("Invalid Input.");
             }
-        } while (true);
+        }
     }
 
     private static int createAnimal(
@@ -81,25 +79,20 @@ public class ZuukiApp {
     ) {
         //checks if theres available space
         if (counter >= kSize) {
-            //early exit
             System.out.println("Max limit has reached!");
-            return counter;
+            return counter; //early exit
         }
         System.out.println("Adding animal..\n.\n.");
 
         while (true) {
-            //bunch of user inputs
             name[counter] = readString("Name:");
             age[counter] = readInt("Age: ", 0, 999);
             species[counter] = readString("Species:");
             enclosure_number[counter] = readInt("Enclosure (0-4): ", 0, 4);
-
             counter++; //update counter
             break;
         }
-
         System.out.println(".\n.\nEnd.");
-
         return counter;
     }
 
@@ -112,11 +105,10 @@ public class ZuukiApp {
     ) {
         //early exit if no registered animal
         if (!isAnyAnimalDataExist(counter)) return;
-
+        //prints all avaible animals
         for (int i = 0; i < counter; i++) {
             System.out.printf("%d. %s (%s)\n", i, name[i], species[i]);
         }
-
         int index = readInt(
             "Which index to update (0-" + (counter - 1) + "): ",
             0,
@@ -136,7 +128,6 @@ public class ZuukiApp {
         int counter
     ) {
         if (!isAnyAnimalDataExist(counter)) return counter;
-
         int index = readInt(
             "Index to delete (0 to " + (counter - 1) + "): ",
             0,
@@ -160,9 +151,8 @@ public class ZuukiApp {
         int[] enclosure_number,
         int counter
     ) {
-        do {
+        while (true) {
             System.out.println("Diplay options:");
-
             String userInput = readString(
                 "1. Name\n2. Species\n3. Enclosure\n4. Back"
             );
@@ -194,7 +184,7 @@ public class ZuukiApp {
                 }
                 default -> System.out.println("Invalid Input.");
             }
-        } while (true);
+        }
     }
 
     private static void searchAnimalByEnclosure(
@@ -214,7 +204,6 @@ public class ZuukiApp {
                 3. Back
                 """
             );
-
             switch (choice) {
                 case "1" -> displayAnimalsByEnclosure(
                     name,
@@ -248,7 +237,6 @@ public class ZuukiApp {
                 printAnimal(i, name, age, species, enclosure_number);
             }
         }
-
         System.out.println(".\n.\nEnd.");
     }
 
@@ -275,7 +263,6 @@ public class ZuukiApp {
 
     //count animals by enclosure
     private static int countAnimals(int[] enclosure_number, int counter) {
-        //get user inputs
         int target = readInt("Enclosure (0-4): ", 0, 4);
         int total = 0;
 
@@ -300,8 +287,8 @@ public class ZuukiApp {
         int counter
     ) {
         if (!isAnyAnimalDataExist(counter)) return;
-
         String target = readString("Name to find: ");
+
         for (int i = 0; i < counter; i++) {
             if (name[i].equalsIgnoreCase(target)) {
                 printAnimal(i, name, age, species, enclosure_number);
@@ -320,9 +307,8 @@ public class ZuukiApp {
     ) {
         if (!isAnyAnimalDataExist(counter)) return;
 
-        do {
+        while (true) {
             displayAllSpecies(species, counter);
-
             String userInput = readString("1. Display\n2. Count 3. Back");
 
             switch (userInput) {
@@ -340,7 +326,7 @@ public class ZuukiApp {
                 }
                 default -> System.out.println("Invalid Input");
             }
-        } while (true);
+        }
     }
 
     private static void displayAnimalBySpecies(
@@ -351,9 +337,8 @@ public class ZuukiApp {
         int counter
     ) {
         String target = readString("Species: ");
-
-        //display all animals of that scpecies
         System.out.println("Displaying..\n.\n.");
+
         for (int i = 0; i < counter; i++) {
             if (species[i].equalsIgnoreCase(target)) {
                 printAnimal(i, name, age, species, enclosure_number);
@@ -365,16 +350,17 @@ public class ZuukiApp {
     private static void displayAllSpecies(String[] species, int counter) {
         String[] res = new String[counter];
         int count = 0;
+
         for (String s : species) {
-            //checks if already exist
             if (s == null || s.isBlank()) continue; // skips null /empty values
+            //checks if already exist
             if (!isSpeciesAlreadyExist(res, s, count)) {
                 res[count] = s;
                 count++;
             }
         }
-
         System.out.println("Species Registered: ");
+
         for (var s : res) {
             if (s == null) continue;
             System.out.print(s + " | ");
@@ -392,7 +378,6 @@ public class ZuukiApp {
                 result[i] != null && result[i].equalsIgnoreCase(str)
             ) return true;
         }
-
         return false;
     }
 
@@ -409,7 +394,6 @@ public class ZuukiApp {
     private static String readString(String prompt) {
         System.out.println(prompt);
         System.out.print(">> ");
-
         return scan.nextLine().trim();
     }
 
@@ -419,7 +403,6 @@ public class ZuukiApp {
             System.out.print(">> ");
             try {
                 int userInput = Integer.parseInt(scan.nextLine());
-
                 if (userInput < min || userInput > max) {
                     System.out.printf(
                         "Enter a value between %d and %d.%n",
