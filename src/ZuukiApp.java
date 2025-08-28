@@ -84,14 +84,11 @@ public class ZuukiApp {
         }
         System.out.println("Adding animal..\n.\n.");
 
-        while (true) {
-            name[counter] = readString("Name:");
-            age[counter] = readInt("Age: ", 0, 999);
-            species[counter] = readString("Species:");
-            enclosure_number[counter] = readInt("Enclosure (0-4): ", 0, 4);
-            counter++; //update counter
-            break;
-        }
+        name[counter] = readString("Name:");
+        age[counter] = readInt("Age: ", 0, 999);
+        species[counter] = readString("Species:");
+        enclosure_number[counter] = readInt("Enclosure (0-4): ", 0, 4);
+        counter++; //update counter
         System.out.println(".\n.\nEnd.");
         return counter;
     }
@@ -397,7 +394,7 @@ public class ZuukiApp {
         return scan.nextLine().trim();
     }
 
-    static int readInt(String prompt, int min, int max) {
+    private static int readInt(String prompt, int min, int max) {
         while (true) {
             System.out.println(prompt);
             System.out.print(">> ");
