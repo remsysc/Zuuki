@@ -21,9 +21,7 @@
 - [Project Structure](#project-structure)
 - [Design Decisions](#design-decisions)
 - [Contributing](#contributing)
-- [Future Enhancements](#future-enhancements)
 - [License](#license)
-- [Contact](#contact)
 
 ## 🎯 About
 
