@@ -13,9 +13,6 @@ import java.util.Scanner;
  * - Display animals by various criteria (name, species, enclosure)
  * - Delete animals from inventory
  * - Count animals by species or enclosure
- *
- * @author Your Name
- * @version 1.0
  */
 public class ZuukiApp {
 
@@ -28,8 +25,6 @@ public class ZuukiApp {
     /**
      * Main entry point of the application.
      * Initializes and runs the Zuuki animal inventory system.
-     *
-     * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
         zuukiApp(); // Launch the main application
