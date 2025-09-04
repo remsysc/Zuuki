@@ -258,11 +258,6 @@ We welcome contributions! Here's how you can help:
 
 
 
-
-## 📋 Project Planning
-
-For detailed project planning and system design, check out our [interactive project plan](https://excalidraw.com/#json=14WxR2giqnqLC67d1z0SV,j1zxeewgo3UKgokDwEAARg).
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
