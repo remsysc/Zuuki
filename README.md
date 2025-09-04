@@ -199,8 +199,6 @@ A total of 1 animal/s were found with species of Lion.
 zuuki/
 ├── src/
 │   └── ZuukiApp.java          # Main application file
-├── docs/
-│   └── project-plan.md        # Project planning documents
 ├── README.md                  # This file
 └── LICENSE                    # MIT License
 ```
