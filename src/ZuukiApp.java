@@ -17,9 +17,6 @@ import java.util.Scanner;
  */
 public class ZuukiApp {
 
-    /** Maximum number of animals that can be stored in the inventory */
-    private static final int kSize = 50;
-
     /** Scanner instance for reading user input throughout the application */
     private static final Scanner scan = new Scanner(System.in);
 
@@ -45,12 +42,11 @@ public class ZuukiApp {
         /* Initialize parallel arrays to store animal data
          * Using parallel arrays instead of objects for simplicity
          * All arrays maintain the same indexing system 
-    	 * ArrayList is dynamic array, initial capacity will be kSize, 
-    	 * it will automatically resize (usually 1.5x the old size) when needed */
-        ArrayList<String> name = new ArrayList<>(kSize); 
-        ArrayList<Integer> age = new ArrayList<>(kSize);
-        ArrayList<String> species = new ArrayList<>(kSize);
-        ArrayList<Integer> enclosure_number = new ArrayList<>(kSize);
+    	 * ArrayList is a dynamic array */
+        ArrayList<String> name = new ArrayList<>(); 
+        ArrayList<Integer> age = new ArrayList<>();
+        ArrayList<String> species = new ArrayList<>();
+        ArrayList<Integer> enclosure_number = new ArrayList<>();
 
         System.out.println("Welcome to Zuuki <3.");
         System.out.println(
@@ -108,7 +104,6 @@ public class ZuukiApp {
     /**
      * Creates a new animal entry in the inventory system.
      *
-     * Validates that there is available space before allowing creation.
      * Prompts user for all required animal information and stores it
      * in the parallel arrays.
      *
@@ -123,12 +118,6 @@ public class ZuukiApp {
         ArrayList<String> species,
         ArrayList<Integer> enclosure_number
     ) {
-        // Check if inventory has reached maximum capacity
-        if (name.size() >= kSize) {
-            System.out.println("Max limit has reached!");
-            return;
-        }
-
         System.out.println("Adding animal..\n.\n.");
 
         /* Collect animal information from user
