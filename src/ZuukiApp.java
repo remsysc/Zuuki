@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -15,9 +16,6 @@ import java.util.Scanner;
  * - Count animals by species or enclosure
  */
 public class ZuukiApp {
-
-    /** Maximum number of animals that can be stored in the inventory */
-    private static final int kSize = 50;
 
     /** Scanner instance for reading user input throughout the application */
     private static final Scanner scan = new Scanner(System.in);
@@ -39,19 +37,16 @@ public class ZuukiApp {
      * - species: Animal species
      * - enclosure_number: Enclosure assignments (0-4)
      *
-     * Uses a counter variable to track the next available index position
-     * and maintain the current number of animals in the system.
      */
     private static void zuukiApp() {
         /* Initialize parallel arrays to store animal data
          * Using parallel arrays instead of objects for simplicity
-         * All arrays maintain the same indexing system */
-        String[] name = new String[kSize];
-        int[] age = new int[kSize];
-        String[] species = new String[kSize];
-        int[] enclosure_number = new int[kSize];
-
-        int counter = 0; // Tracks next available index and total animal count
+         * All arrays maintain the same indexing system 
+    	 * ArrayList is a dynamic array */
+        ArrayList<String> name = new ArrayList<>(); 
+        ArrayList<Integer> age = new ArrayList<>();
+        ArrayList<String> species = new ArrayList<>();
+        ArrayList<Integer> enclosure_number = new ArrayList<>();
 
         System.out.println("Welcome to Zuuki <3.");
         System.out.println(
@@ -71,36 +66,31 @@ public class ZuukiApp {
             );
 
             /* Switch statement handles menu navigation
-             * Each case delegates to appropriate method
-             * Counter is updated when animals are added/removed */
+             * Each case delegates to appropriate method */
             switch (choice) {
-                case "1" -> counter = createAnimal(
+                case "1" -> createAnimal(
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
                 case "2" -> updateAnimal(
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
                 case "3" -> displayAnimal(
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
-                case "4" -> counter = deleteAnimal(
+                case "4" -> deleteAnimal(
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
                 case "5" -> {
                     System.out.println("Thanks for using Zuuki <3.");
@@ -114,43 +104,31 @@ public class ZuukiApp {
     /**
      * Creates a new animal entry in the inventory system.
      *
-     * Validates that there is available space before allowing creation.
      * Prompts user for all required animal information and stores it
-     * in the parallel arrays at the current counter position.
+     * in the parallel arrays.
      *
      * @param name Array storing animal names
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals and next available index
-     * @return Updated counter value after successful creation
      */
-    private static int createAnimal(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    private static void createAnimal(
+    	ArrayList<String> name,
+    	ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
-        // Check if inventory has reached maximum capacity
-        if (counter >= kSize) {
-            System.out.println("Max limit has reached!");
-            return counter; // Return unchanged counter - no animal added
-        }
-
         System.out.println("Adding animal..\n.\n.");
 
         /* Collect animal information from user
          * Each input is validated through helper methods
-         * Data is stored at the current counter index */
-        name[counter] = readString("Name:");
-        age[counter] = readInt("Age: ", 0, 999);
-        species[counter] = readString("Species:");
-        enclosure_number[counter] = readInt("Enclosure (0-4): ", 0, 4);
+         * Data is stored in the arrays*/
+        name.add(readString("Name:"));
+        age.add(readInt("Age: ", 0, 999));
+        species.add(readString("Species:"));
+        enclosure_number.add(readInt("Enclosure (0-4): ", 0, 4));
 
-        counter++; // Increment to next available position
         System.out.println(".\n.\nEnd.");
-        return counter; // Return updated counter
     }
 
     /**
@@ -164,80 +142,65 @@ public class ZuukiApp {
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      */
     private static void updateAnimal(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    	ArrayList<String> name,
+    	ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
+    	int size = name.size();
         // Early exit if no animals exist to update
-        if (!isAnyAnimalDataExist(counter)) return;
+        if (!isAnyAnimalDataExist(size)) return;
 
         /* Display all animals with their index numbers
          * This helps user identify which animal to update */
-        for (int i = 0; i < counter; i++) {
-            System.out.printf("%d. %s (%s)\n", i, name[i], species[i]);
+        for (int i = 0; i < name.size(); i++) {
+            System.out.printf("%d. %s (%s)\n", i, name.get(i), species.get(i));
         }
 
         // Get user selection and update all attributes
         int index = readInt(
-            "Which index to update (0-" + (counter - 1) + "): ",
+            "Which index to update (0-" + (size - 1) + "): ",
             0,
-            counter - 1
+            size - 1
         );
 
         /* Prompt for new values for all attributes
          * Overwrites existing data at selected index */
-        name[index] = readString("New name: ");
-        age[index] = readInt("New age: ", 0, 999);
-        species[index] = readString("New species: ");
-        enclosure_number[index] = readInt("New enclosure (0-4): ", 0, 4);
+        name.set(index, readString("New name: "));
+        age.set(index, readInt("New age: ", 0, 999));
+        species.set(index, readString("New species: "));
+        enclosure_number.set(index, readInt("New enclosure (0-4): ", 0, 4));
     }
 
     /**
      * Deletes an animal from the inventory system.
      *
-     * Uses array shifting technique to maintain data integrity.
-     * When an animal is deleted, all animals after that position
-     * are shifted one position to the left to eliminate gaps.
-     *
      * @param name Array storing animal names
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
-     * @return Updated counter value after deletion
      */
-    private static int deleteAnimal(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    private static void deleteAnimal(
+    	ArrayList<String> name,
+    	ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
-        if (!isAnyAnimalDataExist(counter)) return counter;
+    	int size = name.size();
+        if (!isAnyAnimalDataExist(size)) return;
 
         int index = readInt(
-            "Index to delete (0 to " + (counter - 1) + "): ",
+            "Index to delete (0 to " + (size - 1) + "): ",
             0,
-            counter - 1
+            size - 1
         );
 
-        /* Array shifting algorithm to remove gaps
-         * Starting from deletion point, copy each element
-         * from the next position to current position
-         * This maintains data continuity without gaps */
-        for (int i = index; i < counter - 1; i++) {
-            name[i] = name[i + 1];
-            age[i] = age[i + 1];
-            species[i] = species[i + 1];
-            enclosure_number[i] = enclosure_number[i + 1];
-        }
-
-        return counter - 1; // Reduce counter as one animal was removed
+        name.remove(index);
+        age.remove(index);
+        species.remove(index);
+        enclosure_number.remove(index);
     }
 
     /**
@@ -252,14 +215,12 @@ public class ZuukiApp {
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      */
     private static void displayAnimal(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+        ArrayList<String> name,
+        ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
         // Display options loop until user chooses to return
         while (true) {
@@ -273,22 +234,19 @@ public class ZuukiApp {
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
                 case "2" -> searchAnimalBySpecies(
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
                 case "3" -> searchAnimalByEnclosure(
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
                 case "4" -> {
                     System.out.println("Returning..");
@@ -310,16 +268,15 @@ public class ZuukiApp {
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      */
     private static void searchAnimalByEnclosure(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    	ArrayList<String> name,
+        ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
-        if (!isAnyAnimalDataExist(counter)) return;
+    	int size = name.size();
+        if (!isAnyAnimalDataExist(size)) return;
 
         while (true) {
             String choice = readString(
@@ -336,10 +293,9 @@ public class ZuukiApp {
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
-                case "2" -> countAnimals(enclosure_number, counter);
+                case "2" -> countAnimalByEnclosure(enclosure_number);
                 case "3" -> {
                     System.out.println("Returning..");
                     return;
@@ -359,22 +315,20 @@ public class ZuukiApp {
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      */
     private static void displayAnimalsByEnclosure(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    	ArrayList<String> name,
+    	ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
         int target = readInt("Enclosure (0-4): ", 0, 4);
         System.out.println("Displaying ..\n.\n.");
 
         /* Linear search through all animals
          * Display complete information for matches */
-        for (int i = 0; i < counter; i++) {
-            if (enclosure_number[i] == target) {
+        for (int i = 0; i < enclosure_number.size(); i++) {
+            if (enclosure_number.get(i) == target) {
                 printAnimal(i, name, age, species, enclosure_number);
             }
         }
@@ -382,23 +336,22 @@ public class ZuukiApp {
     }
 
     /**
-     * Counts animals of a specific species (method overloading example).
+     * Counts animals of a specific species.
      *
      * Performs case-insensitive search through species array
      * and returns total count of matches.
      *
      * @param species Array storing animal species
-     * @param counter Current number of animals in inventory
      * @return Total count of animals with matching species
      */
-    private static int countAnimals(String[] species, int counter) {
+    private static int countAnimalBySpecies(ArrayList<String> species) {
         String target = readString("Species to count: ");
         int total = 0;
 
         /* Case-insensitive comparison using equalsIgnoreCase()
          * This provides better user experience */
-        for (int i = 0; i < counter; i++) {
-            if (target.equalsIgnoreCase(species[i])) total++;
+        for (int i = 0; i < species.size(); i++) {
+            if (target.equalsIgnoreCase(species.get(i))) total++;
         }
 
         if (total <= 0) {
@@ -416,22 +369,18 @@ public class ZuukiApp {
     }
 
     /**
-     * Counts animals in a specific enclosure (method overloading example).
-     *
-     * Demonstrates method overloading - same method name but different
-     * parameter types (int[] vs String[]).
+     * Counts animals in a specific enclosure.
      *
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      * @return Total count of animals in specified enclosure
      */
-    private static int countAnimals(int[] enclosure_number, int counter) {
+    private static int countAnimalByEnclosure(ArrayList<Integer> enclosure_number) {
         int target = readInt("Enclosure (0-4): ", 0, 4);
         int total = 0;
 
         // Count animals with matching enclosure number
-        for (int i = 0; i < counter; i++) {
-            if (enclosure_number[i] == target) total++;
+        for (int i = 0; i < enclosure_number.size(); i++) {
+            if (enclosure_number.get(i) == target) total++;
         }
 
         System.out.println(
@@ -454,23 +403,22 @@ public class ZuukiApp {
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      */
     private static void searchAnimalByName(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    	ArrayList<String> name,
+        ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
-        if (!isAnyAnimalDataExist(counter)) return;
+    	int size = name.size();
+        if (!isAnyAnimalDataExist(size)) return;
 
         String target = readString("Name to find: ");
 
         /* Linear search with early termination
          * Returns immediately when first match is found */
-        for (int i = 0; i < counter; i++) {
-            if (name[i].equalsIgnoreCase(target)) {
+        for (int i = 0; i < size; i++) {
+            if (name.get(i).equalsIgnoreCase(target)) {
                 printAnimal(i, name, age, species, enclosure_number);
                 return; // Exit after finding first match
             }
@@ -489,30 +437,28 @@ public class ZuukiApp {
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      */
     private static void searchAnimalBySpecies(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    	ArrayList<String> name,
+        ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
-        if (!isAnyAnimalDataExist(counter)) return;
+    	int size = name.size();
+        if (!isAnyAnimalDataExist(size)) return;
 
         while (true) {
-            displayAllSpecies(species, counter); // Show available species
-            String userInput = readString("1. Display\n2. Count 3. Back");
+            displayAllSpecies(species); // Show available species
+            String userInput = readString("1. Display\n2. Count\n3. Back");
 
             switch (userInput) {
                 case "1" -> displayAnimalBySpecies(
                     name,
                     age,
                     species,
-                    enclosure_number,
-                    counter
+                    enclosure_number
                 );
-                case "2" -> countAnimals(species, counter);
+                case "2" -> countAnimalBySpecies(species);
                 case "3" -> {
                     System.out.println("Returning..");
                     return;
@@ -532,22 +478,20 @@ public class ZuukiApp {
      * @param age Array storing animal ages
      * @param species Array storing animal species
      * @param enclosure_number Array storing enclosure assignments
-     * @param counter Current number of animals in inventory
      */
     private static void displayAnimalBySpecies(
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure_number,
-        int counter
+    	ArrayList<String> name,
+    	ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure_number
     ) {
         String target = readString("Species: ");
         System.out.println("Displaying..\n.\n.");
 
         /* Display all animals matching the specified species
          * No early termination - shows all matches */
-        for (int i = 0; i < counter; i++) {
-            if (species[i].equalsIgnoreCase(target)) {
+        for (int i = 0; i < species.size(); i++) {
+            if (species.get(i).equalsIgnoreCase(target)) {
                 printAnimal(i, name, age, species, enclosure_number);
             }
         }
@@ -562,58 +506,30 @@ public class ZuukiApp {
      * null values and duplicates appropriately.
      *
      * @param species Array storing animal species
-     * @param counter Current number of animals in inventory
      */
-    private static void displayAllSpecies(String[] species, int counter) {
-        String[] res = new String[counter]; // Temporary array for unique species
-        int count = 0;
-
+    private static void displayAllSpecies(ArrayList<String> species) {
+    	ArrayList<String> uniqueSpecies = new ArrayList<>(); // Temporary array for unique species
+        
         /* Algorithm to find unique species:
          * 1. Skip null/empty values
          * 2. Check if species already exists in result array
          * 3. Add to result if unique */
+        StringBuilder result = new StringBuilder();
         for (String s : species) {
             if (s == null || s.isBlank()) continue; // Skip invalid entries
 
             // Only add if species doesn't already exist in results
-            if (!isSpeciesAlreadyExist(res, s, count)) {
-                res[count] = s;
-                count++;
+            if (!uniqueSpecies.contains(s.toLowerCase())) {
+            	uniqueSpecies.add(s.toLowerCase());
+            	result.append(s).append(" | ");
             }
         }
-
-        System.out.println("Species Registered: ");
-
-        // Display all unique species found
-        for (var s : res) {
-            if (s == null) continue; // Skip empty slots
-            System.out.print(s + " | ");
+        String uniqueSpeciesResult = result.toString();
+        if(isAnyAnimalDataExist(uniqueSpeciesResult.length())) {
+            System.out.println("Species Registered: \n"+uniqueSpeciesResult.replaceAll(" \\| $", ""));
         }
+        
         System.out.println("\n.\n.");
-    }
-
-    /**
-     * Helper method to check if a species already exists in the result array.
-     *
-     * Used by displayAllSpecies() to prevent duplicate entries.
-     * Performs case-insensitive comparison.
-     *
-     * @param result Array of unique species found so far
-     * @param str Species name to check
-     * @param counter Number of species currently in result array
-     * @return true if species already exists, false otherwise
-     */
-    private static boolean isSpeciesAlreadyExist(
-        String[] result,
-        String str,
-        int counter
-    ) {
-        for (int i = 0; i < counter; i++) {
-            if (result[i] != null && result[i].equalsIgnoreCase(str)) {
-                return true; // Species found in results
-            }
-        }
-        return false; // Species not found - safe to add
     }
 
     /**
@@ -699,10 +615,10 @@ public class ZuukiApp {
      */
     private static void printAnimal(
         int i,
-        String[] name,
-        int[] age,
-        String[] species,
-        int[] enclosure
+        ArrayList<String> name,
+        ArrayList<Integer> age,
+        ArrayList<String> species,
+        ArrayList<Integer> enclosure
     ) {
         System.out.printf(
             """
@@ -714,10 +630,10 @@ public class ZuukiApp {
             ------------------
             """,
             i,
-            name[i],
-            age[i],
-            species[i],
-            enclosure[i]
+            name.get(i),
+            age.get(i),
+            species.get(i),
+            enclosure.get(i)
         );
     }
 }
