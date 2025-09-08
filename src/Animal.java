@@ -45,4 +45,9 @@ public class Animal {
     public void setEnclosureNumber(int enclosureNumber) {
         this.enclosureNumber = enclosureNumber;
     }
+
+    // Other useful functions
+    public String getDisplayInfo() {
+        return "Name: " + name + "\nAge: " + age + "\nSpecies: " + species + "\nEnclosure: " + enclosureNumber + "\n------------------\n";
+    }
 }

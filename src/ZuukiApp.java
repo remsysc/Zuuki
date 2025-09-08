@@ -490,23 +490,13 @@ public class ZuukiApp {
      * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
     private static void printAnimal(
-        int i,
-        ArrayList<Animal> animals
+            int i,
+            ArrayList<Animal> animals
     ) {
         System.out.printf(
-            """
-            Index: %d
-            Name: %s
-            Age: %d
-            Species: %s
-            Enclosure: %d
-            ------------------
-            """,
-            i,
-            animals.get(i).getName(),
-            animals.get(i).getAge(),
-            animals.get(i).getSpecies(),
-            animals.get(i).getEnclosureNumber()
+                "Index: %d\n%s",
+                i,
+                animals.get(i).getDisplayInfo()
         );
     }
 }
