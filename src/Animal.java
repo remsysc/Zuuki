@@ -12,6 +12,7 @@ public class Animal {
         this.enclosureNumber = enclosureNumber;
     }
 
+    // Get functions
     public String getName() {
         return name;
     }
@@ -28,6 +29,7 @@ public class Animal {
         return enclosureNumber;
     }
 
+    // Set functions
     public void setName(String name) {
         this.name = name;
     }

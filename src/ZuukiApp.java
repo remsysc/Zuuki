@@ -43,10 +43,7 @@ public class ZuukiApp {
          * Using parallel arrays instead of objects for simplicity
          * All arrays maintain the same indexing system 
     	 * ArrayList is a dynamic array */
-        ArrayList<String> name = new ArrayList<>(); 
-        ArrayList<Integer> age = new ArrayList<>();
-        ArrayList<String> species = new ArrayList<>();
-        ArrayList<Integer> enclosure_number = new ArrayList<>();
+        ArrayList<Animal> animals = new ArrayList<>();
 
         System.out.println("Welcome to Zuuki <3.");
         System.out.println(
@@ -68,30 +65,10 @@ public class ZuukiApp {
             /* Switch statement handles menu navigation
              * Each case delegates to appropriate method */
             switch (choice) {
-                case "1" -> createAnimal(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
-                case "2" -> updateAnimal(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
-                case "3" -> displayAnimal(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
-                case "4" -> deleteAnimal(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
+                case "1" -> createAnimal(animals);
+                case "2" -> updateAnimal(animals);
+                case "3" -> displayAnimal(animals);
+                case "4" -> deleteAnimal(animals);
                 case "5" -> {
                     System.out.println("Thanks for using Zuuki <3.");
                     return; // Exit application
@@ -107,26 +84,20 @@ public class ZuukiApp {
      * Prompts user for all required animal information and stores it
      * in the parallel arrays.
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void createAnimal(
-    	ArrayList<String> name,
-    	ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
+    private static void createAnimal(ArrayList<Animal> animals) {
         System.out.println("Adding animal..\n.\n.");
 
         /* Collect animal information from user
          * Each input is validated through helper methods
          * Data is stored in the arrays*/
-        name.add(readString("Name:"));
-        age.add(readInt("Age: ", 0, 999));
-        species.add(readString("Species:"));
-        enclosure_number.add(readInt("Enclosure (0-4): ", 0, 4));
+        String name = readString("Name:");
+        int age = readInt("Age: ", 0, 999);
+        String species = readString("Species:");
+        int enclosureNumber = readInt("Enclosure (0-4): ", 0, 4);
+
+        animals.add(new Animal(name, age, species, enclosureNumber));
 
         System.out.println(".\n.\nEnd.");
     }
@@ -138,25 +109,17 @@ public class ZuukiApp {
      * allows user to select which animal to update, then
      * prompts for new values for all attributes.
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void updateAnimal(
-    	ArrayList<String> name,
-    	ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
-    	int size = name.size();
+    private static void updateAnimal(ArrayList<Animal> animals) {
+    	int size = animals.size();
         // Early exit if no animals exist to update
         if (!isAnyAnimalDataExist(size)) return;
 
         /* Display all animals with their index numbers
          * This helps user identify which animal to update */
-        for (int i = 0; i < name.size(); i++) {
-            System.out.printf("%d. %s (%s)\n", i, name.get(i), species.get(i));
+        for (int i = 0; i < animals.size(); i++) {
+            System.out.printf("%d. %s (%s)\n", i, animals.get(i).getName(), animals.get(i).getSpecies());
         }
 
         // Get user selection and update all attributes
@@ -168,27 +131,19 @@ public class ZuukiApp {
 
         /* Prompt for new values for all attributes
          * Overwrites existing data at selected index */
-        name.set(index, readString("New name: "));
-        age.set(index, readInt("New age: ", 0, 999));
-        species.set(index, readString("New species: "));
-        enclosure_number.set(index, readInt("New enclosure (0-4): ", 0, 4));
+        animals.get(index).setName(readString("New name: "));
+        animals.get(index).setAge(readInt("New age: ", 0, 999));
+        animals.get(index).setSpecies(readString("New species: "));
+        animals.get(index).setEnclosureNumber(readInt("New enclosure (0-4): ", 0, 4));
     }
 
     /**
      * Deletes an animal from the inventory system.
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void deleteAnimal(
-    	ArrayList<String> name,
-    	ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
-    	int size = name.size();
+    private static void deleteAnimal(ArrayList<Animal> animals) {
+    	int size = animals.size();
         if (!isAnyAnimalDataExist(size)) return;
 
         int index = readInt(
@@ -197,10 +152,7 @@ public class ZuukiApp {
             size - 1
         );
 
-        name.remove(index);
-        age.remove(index);
-        species.remove(index);
-        enclosure_number.remove(index);
+        animals.remove(index);
     }
 
     /**
@@ -211,17 +163,9 @@ public class ZuukiApp {
      * 2. Browse by species (with counting)
      * 3. Browse by enclosure (with counting)
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void displayAnimal(
-        ArrayList<String> name,
-        ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
+    private static void displayAnimal(ArrayList<Animal> animals) {
         // Display options loop until user chooses to return
         while (true) {
             System.out.println("Diplay options:");
@@ -230,24 +174,9 @@ public class ZuukiApp {
             );
 
             switch (userInput) {
-                case "1" -> searchAnimalByName(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
-                case "2" -> searchAnimalBySpecies(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
-                case "3" -> searchAnimalByEnclosure(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
+                case "1" -> searchAnimalByName(animals);
+                case "2" -> searchAnimalBySpecies(animals);
+                case "3" -> searchAnimalByEnclosure(animals);
                 case "4" -> {
                     System.out.println("Returning..");
                     return; // Exit display menu
@@ -264,18 +193,10 @@ public class ZuukiApp {
      * 1. Display all animals in a specific enclosure
      * 2. Count animals in a specific enclosure
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void searchAnimalByEnclosure(
-    	ArrayList<String> name,
-        ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
-    	int size = name.size();
+    private static void searchAnimalByEnclosure(ArrayList<Animal> animals) {
+    	int size = animals.size();
         if (!isAnyAnimalDataExist(size)) return;
 
         while (true) {
@@ -289,13 +210,8 @@ public class ZuukiApp {
             );
 
             switch (choice) {
-                case "1" -> displayAnimalsByEnclosure(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
-                case "2" -> countAnimalByEnclosure(enclosure_number);
+                case "1" -> displayAnimalsByEnclosure(animals);
+                case "2" -> countAnimalByEnclosure(animals);
                 case "3" -> {
                     System.out.println("Returning..");
                     return;
@@ -311,25 +227,17 @@ public class ZuukiApp {
      * Prompts user for target enclosure number, then iterates
      * through all animals to find and display matches.
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void displayAnimalsByEnclosure(
-    	ArrayList<String> name,
-    	ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
+    private static void displayAnimalsByEnclosure(ArrayList<Animal> animals) {
         int target = readInt("Enclosure (0-4): ", 0, 4);
         System.out.println("Displaying ..\n.\n.");
 
         /* Linear search through all animals
          * Display complete information for matches */
-        for (int i = 0; i < enclosure_number.size(); i++) {
-            if (enclosure_number.get(i) == target) {
-                printAnimal(i, name, age, species, enclosure_number);
+        for (int i = 0; i < animals.size(); i++) {
+            if (animals.get(i).getEnclosureNumber() == target) {
+                printAnimal(i, animals);
             }
         }
         System.out.println(".\n.\nEnd.");
@@ -341,17 +249,17 @@ public class ZuukiApp {
      * Performs case-insensitive search through species array
      * and returns total count of matches.
      *
-     * @param species Array storing animal species
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      * @return Total count of animals with matching species
      */
-    private static int countAnimalBySpecies(ArrayList<String> species) {
+    private static int countAnimalBySpecies(ArrayList<Animal> animals) {
         String target = readString("Species to count: ");
         int total = 0;
 
         /* Case-insensitive comparison using equalsIgnoreCase()
          * This provides better user experience */
-        for (int i = 0; i < species.size(); i++) {
-            if (target.equalsIgnoreCase(species.get(i))) total++;
+        for (int i = 0; i < animals.size(); i++) {
+            if (target.equalsIgnoreCase(animals.get(i).getSpecies())) total++;
         }
 
         if (total <= 0) {
@@ -371,16 +279,16 @@ public class ZuukiApp {
     /**
      * Counts animals in a specific enclosure.
      *
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      * @return Total count of animals in specified enclosure
      */
-    private static int countAnimalByEnclosure(ArrayList<Integer> enclosure_number) {
+    private static int countAnimalByEnclosure(ArrayList<Animal> animals) {
         int target = readInt("Enclosure (0-4): ", 0, 4);
         int total = 0;
 
         // Count animals with matching enclosure number
-        for (int i = 0; i < enclosure_number.size(); i++) {
-            if (enclosure_number.get(i) == target) total++;
+        for (int i = 0; i < animals.size(); i++) {
+            if (animals.get(i).getEnclosureNumber() == target) total++;
         }
 
         System.out.println(
@@ -399,18 +307,10 @@ public class ZuukiApp {
      * Performs exact name matching (case-insensitive) and displays
      * the first match found. Returns immediately after finding match.
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void searchAnimalByName(
-    	ArrayList<String> name,
-        ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
-    	int size = name.size();
+    private static void searchAnimalByName(ArrayList<Animal> animals) {
+    	int size = animals.size();
         if (!isAnyAnimalDataExist(size)) return;
 
         String target = readString("Name to find: ");
@@ -418,8 +318,8 @@ public class ZuukiApp {
         /* Linear search with early termination
          * Returns immediately when first match is found */
         for (int i = 0; i < size; i++) {
-            if (name.get(i).equalsIgnoreCase(target)) {
-                printAnimal(i, name, age, species, enclosure_number);
+            if (animals.get(i).getName().equalsIgnoreCase(target)) {
+                printAnimal(i, animals);
                 return; // Exit after finding first match
             }
         }
@@ -433,32 +333,19 @@ public class ZuukiApp {
      * then provides options to display animals by species or
      * count animals by species.
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void searchAnimalBySpecies(
-    	ArrayList<String> name,
-        ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
-    	int size = name.size();
+    private static void searchAnimalBySpecies(ArrayList<Animal> animals) {
+    	int size = animals.size();
         if (!isAnyAnimalDataExist(size)) return;
 
         while (true) {
-            displayAllSpecies(species); // Show available species
+            displayAllSpecies(animals); // Show available species
             String userInput = readString("1. Display\n2. Count\n3. Back");
 
             switch (userInput) {
-                case "1" -> displayAnimalBySpecies(
-                    name,
-                    age,
-                    species,
-                    enclosure_number
-                );
-                case "2" -> countAnimalBySpecies(species);
+                case "1" -> displayAnimalBySpecies(animals);
+                case "2" -> countAnimalBySpecies(animals);
                 case "3" -> {
                     System.out.println("Returning..");
                     return;
@@ -474,25 +361,17 @@ public class ZuukiApp {
      * Prompts user for species name and displays all matching animals.
      * Uses case-insensitive comparison for better user experience.
      *
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure_number Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void displayAnimalBySpecies(
-    	ArrayList<String> name,
-    	ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure_number
-    ) {
+    private static void displayAnimalBySpecies(ArrayList<Animal> animals) {
         String target = readString("Species: ");
         System.out.println("Displaying..\n.\n.");
 
         /* Display all animals matching the specified species
          * No early termination - shows all matches */
-        for (int i = 0; i < species.size(); i++) {
-            if (species.get(i).equalsIgnoreCase(target)) {
-                printAnimal(i, name, age, species, enclosure_number);
+        for (int i = 0; i < animals.size(); i++) {
+            if (animals.get(i).getSpecies().equalsIgnoreCase(target)) {
+                printAnimal(i, animals);
             }
         }
         System.out.println("\n.\n.\nEnd.");
@@ -505,9 +384,9 @@ public class ZuukiApp {
      * then displays them in a user-friendly format. Handles
      * null values and duplicates appropriately.
      *
-     * @param species Array storing animal species
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
-    private static void displayAllSpecies(ArrayList<String> species) {
+    private static void displayAllSpecies(ArrayList<Animal> animals) {
     	ArrayList<String> uniqueSpecies = new ArrayList<>(); // Temporary array for unique species
         
         /* Algorithm to find unique species:
@@ -515,13 +394,13 @@ public class ZuukiApp {
          * 2. Check if species already exists in result array
          * 3. Add to result if unique */
         StringBuilder result = new StringBuilder();
-        for (String s : species) {
-            if (s == null || s.isBlank()) continue; // Skip invalid entries
+        for (Animal a : animals) {
+            if (a.getSpecies() == null || a.getSpecies().isBlank()) continue; // Skip invalid entries
 
             // Only add if species doesn't already exist in results
-            if (!uniqueSpecies.contains(s.toLowerCase())) {
-            	uniqueSpecies.add(s.toLowerCase());
-            	result.append(s).append(" | ");
+            if (!uniqueSpecies.contains(a.getSpecies().toLowerCase())) {
+            	uniqueSpecies.add(a.getSpecies().toLowerCase());
+            	result.append(a.getSpecies()).append(" | ");
             }
         }
         String uniqueSpeciesResult = result.toString();
@@ -608,17 +487,11 @@ public class ZuukiApp {
      * across different parts of the application.
      *
      * @param i Index of the animal in the arrays
-     * @param name Array storing animal names
-     * @param age Array storing animal ages
-     * @param species Array storing animal species
-     * @param enclosure Array storing enclosure assignments
+     * @param animals Array storing every animal with your names, ages, species and enclosure assignments
      */
     private static void printAnimal(
         int i,
-        ArrayList<String> name,
-        ArrayList<Integer> age,
-        ArrayList<String> species,
-        ArrayList<Integer> enclosure
+        ArrayList<Animal> animals
     ) {
         System.out.printf(
             """
@@ -630,10 +503,10 @@ public class ZuukiApp {
             ------------------
             """,
             i,
-            name.get(i),
-            age.get(i),
-            species.get(i),
-            enclosure.get(i)
+            animals.get(i).getName(),
+            animals.get(i).getAge(),
+            animals.get(i).getSpecies(),
+            animals.get(i).getEnclosureNumber()
         );
     }
 }
