@@ -1,4 +1,4 @@
-public class Animal {
+public class Animal implements Comparable<Animal> {
     private String name;
     private int age;
     private String species;
@@ -49,5 +49,23 @@ public class Animal {
     // Other useful functions
     public String getDisplayInfo() {
         return "Name: " + name + "\nAge: " + age + "\nSpecies: " + species + "\nEnclosure: " + enclosureNumber + "\n------------------\n";
+    }
+
+    // Method for comparison logic
+    @Override
+    public int compareTo(Animal a) {
+        if (this.name.compareTo(a.name) != 0) {
+            return this.name.compareTo(a.name);
+        }
+
+        if (this.age != a.age) {
+            return this.age - a.age;
+        }
+
+        if (this.species.compareTo(a.species) != 0) {
+            return this.species.compareTo(a.species);
+        }
+
+        return this.enclosureNumber - a.enclosureNumber;
     }
 }
